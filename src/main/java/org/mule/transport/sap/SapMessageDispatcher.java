@@ -10,22 +10,13 @@
  */
 package org.mule.transport.sap;
 
-import java.util.ArrayList;
-
-import org.w3c.dom.Document;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.OutboundEndpoint;
-import org.mule.transport.AbstractMessageDispatcher;
-import org.mule.DefaultMuleMessage;
-
 import org.mule.api.lifecycle.InitialisationException;
-
-import org.mule.transport.sap.transformer.XmlToJcoFunctionTransformer;
+import org.mule.transport.AbstractMessageDispatcher;
 
 /**
  * <code>SapMessageDispatcher</code> is a message dispatcher class
@@ -51,7 +42,7 @@ public class SapMessageDispatcher extends AbstractMessageDispatcher
 		super(endpoint);
         connector = (SapConnector)endpoint.getConnector();				
 
-        // set datasource dor JCo client
+        // set datasource for JCo client
         
 	}
 
@@ -77,8 +68,12 @@ public class SapMessageDispatcher extends AbstractMessageDispatcher
     {
 		logger.info("*****SapMessageDispatcher.doSend()*****");
         //logger.info(event.getMessageAsString());
-		return new DefaultMuleMessage(this.connector.getMessageAdapter(invoke(event)));
+     	
+		Object payload = event.transformMessage();
+		Object result = this.connector.getAdapter().invoke(payload);
+		return createMuleMessage(result);
 	}
+
 
 	/**
      * Describe <code>doConnect</code> method here.
@@ -88,7 +83,6 @@ public class SapMessageDispatcher extends AbstractMessageDispatcher
     protected void doConnect() throws Exception
     {
         logger.info("*****SapMessageDispatcher.doConnect()*****");
-        this.connector.getAdapter().doInitialize(this.getEndpoint().getName());
 	}
 
 	/**
@@ -110,11 +104,5 @@ public class SapMessageDispatcher extends AbstractMessageDispatcher
     {
         logger.info("*****SapMessageDispatcher.doDispose()*****");
 		
-	}
-
-    private Object invoke(MuleEvent event) throws Exception
-	{
-        Object payload = event.transformMessage();
-        return this.connector.getAdapter().invoke(payload);
 	}
 }

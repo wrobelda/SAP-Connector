@@ -13,15 +13,21 @@ package org.mule.transport.sap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.transport.AbstractConnector;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transport.ConnectorException;
 
 import org.mule.transport.sap.adapter.JcoAdapter;
 
 public class SapConnector extends AbstractConnector
 {
-    private static Log logger = LogFactory.getLog(AbstractConnector.class);
+    public SapConnector(MuleContext context) {
+		super(context);
+	}
+
+	private static Log logger = LogFactory.getLog(AbstractConnector.class);
     public static final String SAP = "sap";
 
     private JcoAdapter adapter = null;
@@ -32,6 +38,7 @@ public class SapConnector extends AbstractConnector
     private String jcoLang;
     private String jcoAshost;
     private String jcoSysnr;
+    private String jcoDestinationName;
     private boolean jcoTrace = false;
     private int JcoPoolCapacity = 1;
     private int JcoPeakLimit = 1;
@@ -41,6 +48,7 @@ public class SapConnector extends AbstractConnector
 	protected void doConnect() throws Exception
     {
         logger.info("************SapConnector.doConnect()*****************");
+        this.adapter.doConnect();
 	}
 
 	protected void doDisconnect() throws Exception
@@ -56,23 +64,21 @@ public class SapConnector extends AbstractConnector
 	protected void doInitialise() throws InitialisationException
     {
         logger.info("************SapConnector.doInitialise()*****************");
+        logger.info("jcoClient:"+getJcoClient());
+        logger.info("jcoUser:"+getJcoUser());
+        logger.info("jcoLang:"+getJcoLang());
+        logger.info("jcoAshost:"+getJcoAshost());
+        logger.info("jcoDestinationName:"+getJcoDestinationName());
+        logger.info("jcoSysnr:"+getJcoSysnr());
+        logger.info("jcoTrace:"+isJcoTrace());
+        
+        this.adapter = new JcoAdapter(this);
 	}
 
 	protected void doStart() throws MuleException
     {
         logger.info("************SapConnector.doStart()*****************");
-        logger.info("jcoClient:"+getJcoClient());
-        logger.info("jcoUser:"+getJcoUser());
-        logger.info("jcoLang:"+getJcoLang());
-        logger.info("jcoAshost:"+getJcoAshost());
-        logger.info("jcoSysnr:"+getJcoSysnr());
-        logger.info("jcoTrace:"+isJcoTrace());
-
-        // set sapConnector parameters
-        
-        this.adapter = new JcoAdapter(this);
-        
-	}
+    }
 
 	protected void doStop() throws MuleException
     {
@@ -286,6 +292,24 @@ public class SapConnector extends AbstractConnector
     }
 
     /**
+     * Gets the value of jcoDestinationName
+     *
+     * @return the value of jcoDestinationName
+     */
+	public String getJcoDestinationName() {
+		return jcoDestinationName;
+	}
+
+	  /**
+     * Sets the value of jcoDestinationName
+     *
+     * @param jcoDestinationName Value to assign to this.jcoDestinationName
+     */
+	public void setJcoDestinationName(String jcoDestinationName) {
+		this.jcoDestinationName = jcoDestinationName;
+	}
+	
+    /**
      * Gets the value of isTest
      *
      * @return the value of isTest
@@ -302,5 +326,7 @@ public class SapConnector extends AbstractConnector
     public void setIsTest(boolean argIsTest) {
         this.isTest = argIsTest;
     }
+
+
 
 }

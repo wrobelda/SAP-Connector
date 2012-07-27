@@ -10,43 +10,27 @@
  */
 package org.mule.transport.sap.transformer;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import javax.xml.stream.XMLInputFactory;
-
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.transformer.AbstractMessageAwareTransformer;
-import org.mule.transformer.AbstractTransformer;
-import org.mule.api.MuleMessage;
-import org.mule.api.transport.Connector;
 import org.mule.transport.sap.SapConnector;
-
 import org.mule.transport.sap.util.MessageConstants;
 
+import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoRecord;
-import com.sap.conn.jco.JCoField;
 import com.sap.conn.jco.JCoTable;
-import com.sap.conn.jco.JCoException;
 
 
 public class XmlToJcoFunctionTransformer 
@@ -144,7 +128,7 @@ public class XmlToJcoFunctionTransformer
                             //recordType = TABLES;
                             tableName = null;
                             push(function.getTableParameterList());
-
+                            
                         } else if (localName.equals(MessageConstants.TABLE)) {
                             if(tableName!=null) {
                                 pop();
@@ -210,9 +194,12 @@ public class XmlToJcoFunctionTransformer
                     stream.close();
                 } catch (IOException ex) {}
             }
-            logger.debug("\n"+function.getImportParameterList().toXML());
-            logger.debug("\n"+function.getExportParameterList().toXML());
-            logger.debug("\n"+function.getTableParameterList().toXML());
+            if (function.getImportParameterList() != null)
+            	logger.debug("\n"+function.getImportParameterList().toXML());
+            if (function.getExportParameterList() != null)
+            	logger.debug("\n"+function.getExportParameterList().toXML());
+            if (function.getTableParameterList() != null)
+            	logger.debug("\n"+function.getTableParameterList().toXML());
             
             return function;
         }
@@ -230,7 +217,7 @@ public class XmlToJcoFunctionTransformer
                 return value;
             }
 
-        }
+        }	
         return null;
     }
 

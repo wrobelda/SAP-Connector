@@ -4,13 +4,13 @@
   <!-- artifactId>mule-transport-sap</artifactId -->
   <artifactId>SAPCPAL</artifactId>
   <packaging>jar</packaging>
-  <version>2.0-alpha2-SNAPSHOT</version>
+  <version>3.0-alpha1-SNAPSHOT</version>
   <name>Mule SAP/JCo Transport</name>
   <description>
     Provides support for polling and requesting SAP/R3 BAPI via SAP JCo
   </description>	
   <properties>
-    <muleVersion>3.0.0</muleVersion>
+    <muleVersion>3.2.0</muleVersion>
     <!-- muleVersion>2.2.1</muleVersion -->
   </properties>
   <scm>
@@ -133,9 +133,9 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>com.sap.conn.jco</groupId>
-      <artifactId>sapjco</artifactId>
-      <version>3.0.1</version>
+      <groupId>com.sap</groupId>
+      <artifactId>sap-jco</artifactId>
+      <version>3.0.7</version>
     </dependency>
     <dependency>
       <groupId>org.mule.transports</groupId>

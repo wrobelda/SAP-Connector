@@ -10,38 +10,33 @@
  */
 package org.mule.transport.sap.transformer;
 
-import java.util.Date;
-import java.io.StringWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Date;
 
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventWriter;
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.transformer.AbstractMessageAwareTransformer;
-import org.mule.transformer.AbstractTransformer;
-import org.mule.api.MuleMessage;
-
 import org.mule.transport.sap.util.MessageConstants;
 
 import com.sap.conn.jco.AbapException;
-import com.sap.conn.jco.JCoTable;
-import com.sap.conn.jco.JCoFunction;
-import com.sap.conn.jco.JCoParameterList;
-import com.sap.conn.jco.JCoParameterField;
-
-import com.sap.conn.jco.JCoParameterFieldIterator;
-import com.sap.conn.jco.JCoRecordFieldIterator;
-import com.sap.conn.jco.JCoRecordField;
 import com.sap.conn.jco.JCoField;
+import com.sap.conn.jco.JCoFunction;
+import com.sap.conn.jco.JCoParameterField;
+import com.sap.conn.jco.JCoParameterFieldIterator;
+import com.sap.conn.jco.JCoParameterList;
+import com.sap.conn.jco.JCoRecordField;
+import com.sap.conn.jco.JCoRecordFieldIterator;
 import com.sap.conn.jco.JCoStructure;
+import com.sap.conn.jco.JCoTable;
 
 
 /**
@@ -81,10 +76,11 @@ public class JcoFunctionToXmlTransformer
         String result = null;
         JCoFunction function = (JCoFunction)message.getPayload();
         try {
-            result = (String)transform(function, encoding);
-        } catch(XMLStreamException e) {
-            throw new TransformerException(this,e);
-        }
+			result = (String)_transform(function, encoding);
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return result;
     }
 
@@ -93,9 +89,9 @@ public class JcoFunctionToXmlTransformer
      *
      * @param obj an <code>Object</code> value
      * @return an <code>Object</code> value
-     * @exception XMLStreamException if an error occurs
+     * @throws XMLStreamException 
      */
-    public Object transform(Object obj, String encoding) throws XMLStreamException {
+    public Object _transform(Object obj, String encoding) throws TransformerException, XMLStreamException {
         // getting JCoFunction object
         JCoFunction function = (JCoFunction)obj;
         

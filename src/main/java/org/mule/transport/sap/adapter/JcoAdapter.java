@@ -16,17 +16,14 @@ import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.mule.transport.sap.SapConnector;
 
-import com.sap.conn.jco.JCoFunctionTemplate;
-import com.sap.conn.jco.JCoFunction;
-import com.sap.conn.jco.JCoException;
-import com.sap.conn.jco.AbapException;
-import com.sap.conn.jco.JCoRepository;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
-
+import com.sap.conn.jco.JCoException;
+import com.sap.conn.jco.JCoFunction;
+import com.sap.conn.jco.JCoFunctionTemplate;
+import com.sap.conn.jco.JCoRepository;
 import com.sap.conn.jco.ext.DestinationDataProvider;
 
 
@@ -58,47 +55,46 @@ public class JcoAdapter
     }
 
     /**
-     * Initialisation JCO connection pool
+     * Initialization JCO connection pool
      *
      * @throws Exception
      */
     public synchronized void doInitialize(String name) throws Exception
     {
-        Properties connectProperties = new Properties();
-        connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST,
-                                      this.connector.getJcoAshost());
-        connectProperties.setProperty(DestinationDataProvider.JCO_SYSNR,
-                                      this.connector.getJcoSysnr());
-        connectProperties.setProperty(DestinationDataProvider.JCO_CLIENT,
-                                      this.connector.getJcoClient());
-        connectProperties.setProperty(DestinationDataProvider.JCO_USER,
-                                      this.connector.getJcoUser());
-        connectProperties.setProperty(DestinationDataProvider.JCO_PASSWD,
-                                      this.connector.getJcoPasswd());
-        connectProperties.setProperty(DestinationDataProvider.JCO_LANG,
-                                      this.connector.getJcoLang());
+		Properties connectProperties = new Properties();
+		connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST,
+		                              this.connector.getJcoAshost());
+		connectProperties.setProperty(DestinationDataProvider.JCO_SYSNR,
+		                              this.connector.getJcoSysnr());
+		connectProperties.setProperty(DestinationDataProvider.JCO_CLIENT,
+		                              this.connector.getJcoClient());
+		connectProperties.setProperty(DestinationDataProvider.JCO_USER,
+		                              this.connector.getJcoUser());
+		connectProperties.setProperty(DestinationDataProvider.JCO_PASSWD,
+		                              this.connector.getJcoPasswd());
+		connectProperties.setProperty(DestinationDataProvider.JCO_LANG,
+		                              this.connector.getJcoLang());
 
-        if (this.connector.isJcoTrace() == true) {
-            connectProperties.setProperty(DestinationDataProvider.JCO_TRACE,"1");
-        } else {
-            connectProperties.setProperty(DestinationDataProvider.JCO_TRACE,"0");
-        }
-                                      
+    	if (this.connector.isJcoTrace() == true) {
+		    connectProperties.setProperty(DestinationDataProvider.JCO_TRACE,"1");
+		} else {
+		    connectProperties.setProperty(DestinationDataProvider.JCO_TRACE,"0");
+		}
 
+		connectProperties.setProperty(DestinationDataProvider.JCO_POOL_CAPACITY,
+		                              new Integer(this.connector.getJcoPoolCapacity()).toString());
+		connectProperties.setProperty(DestinationDataProvider.JCO_PEAK_LIMIT,
+		                              new Integer(this.connector.getJcoPeakLimit()).toString());
 
-        connectProperties.setProperty(DestinationDataProvider.JCO_POOL_CAPACITY,
-                                      new Integer(this.connector.getJcoPoolCapacity()).toString());
-        connectProperties.setProperty(DestinationDataProvider.JCO_PEAK_LIMIT,
-                                      new Integer(this.connector.getJcoPeakLimit()).toString());
-
-        //createDataFile(ABAP_AS_POOLED, "jcoDestination", connectProperties);
-
-        //MyDestinationDataProvider myProvider = new MyDestinationDataProvider();
-        //com.sap.conn.jco.ext.Environment.registerDestinationDataProvider(myProvider);
-        createDataFile(name, "jcoDestination", connectProperties);
-
-        destination = JCoDestinationManager.getDestination(name);
-        this.repository =  destination.getRepository();
+		//createDataFile(ABAP_AS_POOLED, "jcoDestination", connectProperties);
+		
+		createDataFile(name, "jcoDestination", connectProperties);
+    }
+    
+    public synchronized void doConnect() throws Exception
+    {
+    	destination = JCoDestinationManager.getDestination(connector.getJcoDestinationName());
+		this.repository =  destination.getRepository();
     }
 
     public Object invoke(Object payload) throws JCoException {
@@ -120,9 +116,10 @@ public class JcoAdapter
      *
      * @param name a <code>String</code> value
      * @return a <code>JCO.Function</code> value
+     * @throws Exception 
      */
     public JCoFunction getFunction(final String name)
-        throws JCoException
+        throws Exception
     {
         JCoFunctionTemplate functionTempl
             = this.repository.getFunctionTemplate(name);
