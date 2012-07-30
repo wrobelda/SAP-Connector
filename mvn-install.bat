@@ -1,1 +1,1 @@
-mvn install:install-file -DgroupId=com.sap.conn.jco  -DartifactId=sapjco -Dversion=3.0.1 -Dpackaging=jar  -Dfile=sapjco3.jar
+mvn install:install-file -DgroupId=com.sap.conn.jco  -DartifactId=sapjco -Dversion=3.0.7 -Dpackaging=jar  -Dfile=sapjco3.jar
