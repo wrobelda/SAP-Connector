@@ -73,6 +73,7 @@ public class SapConnector extends AbstractConnector
         logger.info("jcoTrace:"+isJcoTrace());
         
         this.adapter = new JcoAdapter(this);
+      	this.adapter.initialise();
 	}
 
 	protected void doStart() throws MuleException

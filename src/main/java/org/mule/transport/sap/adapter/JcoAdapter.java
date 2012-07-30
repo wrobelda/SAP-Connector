@@ -16,6 +16,8 @@ import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.transport.sap.SapConnector;
 
 import com.sap.conn.jco.JCoDestination;
@@ -32,7 +34,7 @@ import com.sap.conn.jco.ext.DestinationDataProvider;
  * @author <a href="mailto:makoto@zebra"></a>
  * @version 1.0
  */
-public class JcoAdapter
+public class JcoAdapter implements Initialisable
 {
     private static Log logger = LogFactory.getLog(JcoAdapter.class);
     Properties connectProperties = new Properties();
@@ -59,7 +61,7 @@ public class JcoAdapter
      *
      * @throws Exception
      */
-    public synchronized void doInitialize(String name) throws Exception
+    public synchronized void initialise() throws InitialisationException
     {
 		Properties connectProperties = new Properties();
 		connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST,
@@ -88,7 +90,7 @@ public class JcoAdapter
 
 		//createDataFile(ABAP_AS_POOLED, "jcoDestination", connectProperties);
 		
-		createDataFile(name, "jcoDestination", connectProperties);
+		createDataFile(this.connector.getJcoDestinationName(), "jcoDestination", connectProperties);
     }
     
     public synchronized void doConnect() throws Exception
@@ -161,4 +163,5 @@ public class JcoAdapter
             }
         }
     }
+
 }
