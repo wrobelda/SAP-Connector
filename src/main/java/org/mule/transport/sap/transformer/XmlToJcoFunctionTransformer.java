@@ -65,13 +65,17 @@ public class XmlToJcoFunctionTransformer
         Object obj = message.getPayload();
 
         JCoFunction function = null;
-        if (obj instanceof byte[]) {
-            try {
-                function = transform(new ByteArrayInputStream((byte[])obj), encoding);
-            } catch(XMLStreamException e) {
-                throw new TransformerException(this,e);
-            }
-        }
+        
+		try {
+			if (obj instanceof byte[]) {
+				function = transform(new ByteArrayInputStream((byte[]) obj), encoding);
+			} else if (obj instanceof String) {
+				function = transform(new ByteArrayInputStream(((String) obj).getBytes()), encoding);
+			}
+		} catch (XMLStreamException e) {
+			throw new TransformerException(this, e);
+		}
+
         return function;
     }
 
