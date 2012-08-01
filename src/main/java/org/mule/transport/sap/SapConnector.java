@@ -12,13 +12,10 @@ package org.mule.transport.sap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
-import org.mule.transport.AbstractConnector;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.ConnectorException;
-
+import org.mule.transport.AbstractConnector;
 import org.mule.transport.sap.adapter.JcoAdapter;
 
 public class SapConnector extends AbstractConnector
@@ -71,6 +68,8 @@ public class SapConnector extends AbstractConnector
         logger.info("jcoDestinationName:"+getJcoDestinationName());
         logger.info("jcoSysnr:"+getJcoSysnr());
         logger.info("jcoTrace:"+isJcoTrace());
+        
+        this.setMaxDispatchersActive(getJcoPeakLimit());
         
         this.adapter = new JcoAdapter(this);
       	this.adapter.initialise();
