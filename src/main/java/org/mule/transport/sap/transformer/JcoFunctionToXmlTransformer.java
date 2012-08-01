@@ -324,7 +324,7 @@ public class JcoFunctionToXmlTransformer
     private void writeErrorElement(XMLEventWriter writer, AbapException[] exceptions)
         throws XMLStreamException {
         if (exceptions==null) {
-            logger.info("There is no exception");
+            logger.debug("There is no exception");
         } else {
             if (exceptions.length > 0)
                 {

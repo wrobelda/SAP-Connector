@@ -102,7 +102,7 @@ public class JcoAdapter implements Initialisable
     public Object invoke(Object payload) throws JCoException {
         JCoFunction function = (JCoFunction)payload;
         function.execute(this.destination);
-        logger.info(function);
+        logger.debug(function);
         return function;
     }
 
