@@ -68,6 +68,8 @@ public class SapConnector extends AbstractConnector
         logger.info("jcoDestinationName:"+getJcoDestinationName());
         logger.info("jcoSysnr:"+getJcoSysnr());
         logger.info("jcoTrace:"+isJcoTrace());
+        logger.info("jcoPeakLimit:"+getJcoPeakLimit());
+        logger.info("jcoPoolCapacity:"+getJcoPoolCapacity());
         
         this.setMaxDispatchersActive(getJcoPeakLimit());
         
