@@ -43,9 +43,6 @@ public class JcoAdapter implements Initialisable
     private SapConnector connector;
     private DestinationDataProvider destinationDataProvider;
     
-
-    static String ABAP_AS_POOLED = "ABAP_AS_WITH_POOL";
-
     /**
      * This is a constructor for creating a new <code>SapDataSource</code> instance.
      *
@@ -145,24 +142,5 @@ public class JcoAdapter implements Initialisable
         logger.info("------------------> destination : "+destination);
         function.execute(this.destination);
         return;
-    }
-
-    static void createDataFile(String name, String suffix, Properties properties)
-    {
-        File cfg = new File(name+"."+suffix);
-        if(!cfg.exists())
-        {
-            try
-            {
-                FileOutputStream fos = new FileOutputStream(cfg, false);
-                properties.store(fos, "for connection");
-                fos.close();
-            }
-            catch (Exception e)
-            {
-                throw new RuntimeException("Unable to create the destination file "
-                                                   + cfg.getName(), e);
-            }
-        }
     }
 }
