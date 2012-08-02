@@ -37,11 +37,12 @@ import com.sap.conn.jco.ext.DestinationDataProvider;
 public class JcoAdapter implements Initialisable
 {
     private static Log logger = LogFactory.getLog(JcoAdapter.class);
-    Properties connectProperties = new Properties();
     
     private JCoRepository repository;
     private JCoDestination destination;
     private SapConnector connector;
+    private DestinationDataProvider destinationDataProvider;
+    
 
     static String ABAP_AS_POOLED = "ABAP_AS_WITH_POOL";
 
@@ -88,9 +89,10 @@ public class JcoAdapter implements Initialisable
 		connectProperties.setProperty(DestinationDataProvider.JCO_PEAK_LIMIT,
 		                              new Integer(this.connector.getJcoPeakLimit()).toString());
 
-		//createDataFile(ABAP_AS_POOLED, "jcoDestination", connectProperties);
+		destinationDataProvider = new DestinationDataSimpleProvider(connectProperties);
 		
-		createDataFile(this.connector.getJcoDestinationName(), "jcoDestination", connectProperties);
+		if (destinationDataProvider != null && !com.sap.conn.jco.ext.Environment.isDestinationDataProviderRegistered())
+			com.sap.conn.jco.ext.Environment.registerDestinationDataProvider(destinationDataProvider);
     }
     
     public synchronized void doConnect() throws Exception
@@ -163,5 +165,4 @@ public class JcoAdapter implements Initialisable
             }
         }
     }
-
 }
